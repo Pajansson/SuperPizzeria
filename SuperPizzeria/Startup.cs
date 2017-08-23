@@ -41,13 +41,13 @@ namespace SuperPizzeria
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<UserManager<ApplicationUser>>();
-            services.AddTransient < RoleManager<IdentityRole>>();
+            services.AddTransient <RoleManager<IdentityRole>>();
 
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<ApplicationUser> userManager, ApplicationDbContext context, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -68,8 +68,10 @@ namespace SuperPizzeria
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Dishes}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            DbInitializer.Initialize(context, userManager, roleManager);
         }
     }
 }

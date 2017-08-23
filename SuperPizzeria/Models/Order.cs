@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 
 namespace SuperPizzeria.Models
 {
-    public class Ingredient
+    public class Order
     {
-        public string Name { get; set; }
+        public Cart Cart { get; set; }
         public int Id { get; set; }
-        public List<DishIngredient> DishIngredients { get; set; }
-        public bool Included { get; set; }
     }
 }

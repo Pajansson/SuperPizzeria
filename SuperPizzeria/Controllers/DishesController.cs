@@ -1,9 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SuperPizzeria.Data;
 using SuperPizzeria.Models;
+using SuperPizzeria.ViewModels;
 
 namespace SuperPizzeria.Controllers
 {
@@ -19,7 +23,13 @@ namespace SuperPizzeria.Controllers
         // GET: Dishes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Dishes.ToListAsync());
+            var dishes = new List<Dish>();
+            dishes = await _context.Dishes.ToListAsync();
+            foreach (var dish in dishes)
+            {
+                await Details(dish.Id);
+            }
+            return View(dishes);
         }
 
         // GET: Dishes/Details/5
@@ -71,13 +81,16 @@ namespace SuperPizzeria.Controllers
             {
                 return NotFound();
             }
-
+            var ingredientsList = await _context.Ingredients.ToListAsync();
             var dish = await _context.Dishes.SingleOrDefaultAsync(m => m.Id == id);
+            var editDish = new EditDishViewModel();
+            editDish.Dish = dish;
+            editDish.Ingredients = ingredientsList;
             if (dish == null)
             {
                 return NotFound();
             }
-            return View(dish);
+            return View(editDish);
         }
 
         // POST: Dishes/Edit/5
@@ -147,6 +160,44 @@ namespace SuperPizzeria.Controllers
         private bool DishExists(int id)
         {
             return _context.Dishes.Any(e => e.Id == id);
+        }
+
+        public IActionResult AddToCart(int id)
+        {
+            var dish = _context.Dishes.SingleOrDefault(x => x.Id == id);
+
+            Cart cart;
+
+            if (HttpContext.Session.GetString("AddedDishes") == null)
+            {
+                cart = new Cart() { CartItems = new List<CartItem>() };
+            }
+            else
+            {
+                var temp = HttpContext.Session.GetString("AddedDishes");
+                cart = JsonConvert.DeserializeObject<Cart>(temp);
+            }
+
+            CartItem cartItem = new CartItem
+            {
+                Dish = dish,
+                Quantity = 1,
+                DishId = dish.Id
+            };
+
+            if (cart.CartItems.Any(x => x.DishId == dish.Id))
+            {
+                cart.CartItems.First(x => x.DishId == dish.Id).Quantity++;
+            }
+            else
+            {
+                cart.CartItems.Add(cartItem);
+            }
+
+            var serializedValue = JsonConvert.SerializeObject(cart);
+            HttpContext.Session.SetString("AddedDishes", serializedValue);
+
+            return PartialView("_CartPartial", cart.CartItems);
         }
     }
 }
