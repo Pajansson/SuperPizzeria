@@ -42,6 +42,7 @@ namespace SuperPizzeria
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<UserManager<ApplicationUser>>();
             services.AddTransient <RoleManager<IdentityRole>>();
+            services.AddSession();
 
             services.AddMvc();
         }
@@ -61,7 +62,7 @@ namespace SuperPizzeria
             }
 
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseAuthentication();
 
             app.UseMvc(routes =>

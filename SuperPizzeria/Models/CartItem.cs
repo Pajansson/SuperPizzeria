@@ -7,6 +7,10 @@ namespace SuperPizzeria.Models
 {
     public class CartItem
     {
+        public CartItem()
+        {
+            Quantity = 1;
+        }
         public Cart Cart { get; set; }
         public int CartId { get; set; }
         public Dish Dish { get; set; }

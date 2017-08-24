@@ -4,6 +4,10 @@ namespace SuperPizzeria.Models
 {
     public class Dish
     {
+        public Dish()
+        {
+            DishIngredients = new List<DishIngredient>();
+        }
         public int CategoryId { get; set; }
         public string Name { get; set; }
         public int Id { get; set; }

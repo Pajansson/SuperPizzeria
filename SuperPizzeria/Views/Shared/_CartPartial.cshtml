@@ -1,18 +1,19 @@
-﻿@*@using System.Collections.Generic
-@using System.Linq
-@model System.Collections.Generic.ICollection<SuperPizzeria.Models.CartItem>
+﻿@model SuperPizzeria.Models.Cart
 
 <h2>Cart: </h2>
 <table>
-    @foreach (var cartItem in Model)
+    @if (Model != null)
     {
-        <tr>
-            <td>Dish: @cartItem.Dish.Name </td>
-            <td> Quantity: @cartItem.Quantity </td>
-            <td> Price each: @cartItem.Dish.Price </td>
-            @*<td><a asp-action="Delete" asp-controller="Tomasos" asp-route-id="@dish.Matratt.MatrattId" class="btn btn-xs btn-danger">Ta Bort</a></td>*@
-        @*</tr>
+        foreach (var cartItem in Model.CartItems)
+         {
+             <tr>
+                 <td>Dish: @cartItem.Dish.Name </td>
+                 <td> Quantity: @cartItem.Quantity </td>
+                 <td> Price each: @cartItem.Dish.Price </td>
+             </tr>
+         }
     }
+    
 </table>
-<h2> Summa: @Model.Sum(x => x.Dish.Price * x.Quantity):-</h2>
-<a asp-controller="Tomasos" asp-action="CheckOut">Till kassan</a>*@
+@*<h2> Summa: @Model.Sum(x => x.Dish.Price * x.Quantity):-</h2>*@
+<a asp-controller="Tomasos" asp-action="CheckOut">Till kassan</a>

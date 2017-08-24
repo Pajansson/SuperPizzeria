@@ -29,7 +29,9 @@ namespace SuperPizzeria.Controllers
             {
                 await Details(dish.Id);
             }
-            return View(dishes);
+            var dishVm = new DishCartViewModel();
+            dishVm.Dishes = dishes;
+            return View(dishVm);
         }
 
         // GET: Dishes/Details/5
@@ -162,42 +164,42 @@ namespace SuperPizzeria.Controllers
             return _context.Dishes.Any(e => e.Id == id);
         }
 
-        public IActionResult AddToCart(int id)
-        {
-            var dish = _context.Dishes.SingleOrDefault(x => x.Id == id);
+        //public IActionResult AddToCart(int id)
+        //{
+        //    var dish = _context.Dishes.SingleOrDefault(x => x.Id == id);
 
-            Cart cart;
+        //    Cart cart;
 
-            if (HttpContext.Session.GetString("AddedDishes") == null)
-            {
-                cart = new Cart() { CartItems = new List<CartItem>() };
-            }
-            else
-            {
-                var temp = HttpContext.Session.GetString("AddedDishes");
-                cart = JsonConvert.DeserializeObject<Cart>(temp);
-            }
+        //    if (HttpContext.Session.GetString("AddedDishes") == null)
+        //    {
+        //        cart = new Cart() { CartItems = new List<CartItem>() };
+        //    }
+        //    else
+        //    {
+        //        var temp = HttpContext.Session.GetString("AddedDishes");
+        //        cart = JsonConvert.DeserializeObject<Cart>(temp);
+        //    }
 
-            CartItem cartItem = new CartItem
-            {
-                Dish = dish,
-                Quantity = 1,
-                DishId = dish.Id
-            };
+        //    CartItem cartItem = new CartItem
+        //    {
+        //        Dish = dish,
+        //        Quantity = 1,
+        //        DishId = dish.Id
+        //    };
 
-            if (cart.CartItems.Any(x => x.DishId == dish.Id))
-            {
-                cart.CartItems.First(x => x.DishId == dish.Id).Quantity++;
-            }
-            else
-            {
-                cart.CartItems.Add(cartItem);
-            }
+        //    if (cart.CartItems.Any(x => x.DishId == dish.Id))
+        //    {
+        //        cart.CartItems.First(x => x.DishId == dish.Id).Quantity++;
+        //    }
+        //    else
+        //    {
+        //        cart.CartItems.Add(cartItem);
+        //    }
 
-            var serializedValue = JsonConvert.SerializeObject(cart);
-            HttpContext.Session.SetString("AddedDishes", serializedValue);
+        //    var serializedValue = JsonConvert.SerializeObject(cart);
+        //    HttpContext.Session.SetString("AddedDishes", serializedValue);
 
-            return PartialView("_CartPartial", cart.CartItems);
-        }
+        //    return PartialView("_CartPartial", cart.CartItems);
+        //}
     }
 }
