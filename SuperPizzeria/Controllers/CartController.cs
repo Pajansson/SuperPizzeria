@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SuperPizzeria.Data;
 using SuperPizzeria.Models;
+using SuperPizzeria.ViewModels;
 
 namespace SuperPizzeria.Controllers
 {
@@ -27,7 +28,7 @@ namespace SuperPizzeria.Controllers
             return View(await _context.Carts.ToListAsync());
         }
 
-        public IActionResult AddToCart(int id)
+        public IActionResult AddToCartItemToCart(int id)
         {
             var dbdish = _context.Dishes.FirstOrDefault(x => x.Id == id);
             var currentCart = GetCurrentCart();
@@ -39,6 +40,21 @@ namespace SuperPizzeria.Controllers
             SetCurrentCart(currentCart);
 
             return PartialView("_CartPartial",currentCart);
+        }
+
+        public IActionResult CustomizeDish(int id)
+        {
+            var dbdish = _context.Dishes.FirstOrDefault(x => x.Id == id);
+            dbdish.DishIngredients = _context.DishIngredients.Where(x => x.DishId == dbdish.Id).ToList();
+            dbdish.DishIngredients.ForEach(i => i.Ingredient =_context.Ingredients.FirstOrDefault(x => x.Id == i.IngredientId));
+            var customizeDishViewModel = new EditDishViewModel
+            {
+                Dish = dbdish,
+                Ingredients = _context.Ingredients.ToList()
+            };
+            //dbdish.DishIngredients = ingredientsList;
+
+            return PartialView("_CartItemPartial", customizeDishViewModel);
         }
 
         public void SetCurrentCart(Cart cart)

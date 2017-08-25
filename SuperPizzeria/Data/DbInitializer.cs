@@ -29,6 +29,7 @@ namespace SuperPizzeria.Data
                 var vegetarian = new Category {Name = "Vegetarian"};
                 var normal = new Category { Name = "Normal" };
                 var cheese = new Ingredient { Name = "Cheese" };
+                var pineapple = new Ingredient { Name = "Pineapple" };
                 var tomatoe = new Ingredient { Name = "Tomatoe" };
                 var ham = new Ingredient { Name = "Ham" };
                 var capricciosa = new Dish { Name = "Capricciosa", Price = 79 };
@@ -41,6 +42,7 @@ namespace SuperPizzeria.Data
                 capricciosa.DishIngredients.Add(capricciosaTomatoe);
                 capricciosa.DishIngredients.Add(capricciosaCheese);
                 capricciosa.DishIngredients.Add(capricciosaHam);
+                context.Ingredients.Add(pineapple);
                 context.Dishes.Add(capricciosa);
                 context.Dishes.Add(margaritha);
                 context.Dishes.Add(hawaii);

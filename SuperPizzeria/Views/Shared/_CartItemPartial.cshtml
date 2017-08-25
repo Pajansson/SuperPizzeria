@@ -1,0 +1,55 @@
+﻿@using System
+@using System.Linq
+@model SuperPizzeria.ViewModels.EditDishViewModel
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" data-dismiss="modal" class="class pull-right"><span class="glyphicon glyphicon-remove"></span></a>
+                <h3 class="modal-title">Edit</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 product_img">
+                        <img src="" class="img-responsive">
+                    </div>
+                    <div class="col-md-6 product_content">
+                        <p>@Model.Dish.Name</p>
+                        <h3 class="cost"><span class="glyphicon glyphicon-usd"></span>@Model.Dish.Price<small class="pre-cost"><span class="glyphicon glyphicon-usd"></span></small></h3>
+                            <!-- end col -->
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                @if (Model.Ingredients != null)
+                                {
+                                    var index = 0;
+
+                                    foreach (var ingredient in Model.Ingredients)
+                                    {
+                                        <p>@ingredient.Name</p>
+                                        <input name="Model.Ingredient[@index].Id" value=""/>//todo fix posting
+                                        <input name="Model.Ingredient[@index].Enabled" type="checkbox" @(Model.Dish.DishIngredients.Any(x => x.IngredientId == ingredient.Id) ? "checked=checked" : String.Empty)sp-for="@ingredient.Included"/>
+
+                                        index++;
+                                    }
+                                }
+                                
+                            </div>
+                            <!-- end col -->
+                            <div class="col-md-4 col-sm-12">
+                                <select class="form-control" name="select">
+                                    <option value="" selected="">QTY</option>
+                                    <option value="">1</option>
+                                    <option value="">2</option>
+                                    <option value="">3</option>
+                                </select>
+                            </div>
+                            <!-- end col -->
+                        </div>
+                        <div class="space-ten"></div>
+                        <div class="btn-ground">
+                            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
