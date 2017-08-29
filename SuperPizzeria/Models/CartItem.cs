@@ -9,6 +9,7 @@ namespace SuperPizzeria.Models
     {
         public CartItem()
         {
+            CartItemIngredients = new List<CartItemIngredient>();
             Quantity = 1;
         }
 
@@ -19,6 +20,6 @@ namespace SuperPizzeria.Models
         public int DishId { get; set; }
         public int Quantity { get; set; }
         public List<CartItemIngredient> CartItemIngredients { get; set; }
-        public Guid IdGenerator { get { return Guid.NewGuid(); } }
+        //public Guid IdGenerator { get { return Guid.NewGuid(); } }
     }
 }

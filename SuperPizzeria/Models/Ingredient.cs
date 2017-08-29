@@ -10,6 +10,6 @@ namespace SuperPizzeria.Models
         public string Name { get; set; }
         public int Id { get; set; }
         public List<DishIngredient> DishIngredients { get; set; }
-        public bool Included { get; set; }
+        //public bool Included { get; set; }
     }
 }

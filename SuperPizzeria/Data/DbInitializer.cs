@@ -30,6 +30,8 @@ namespace SuperPizzeria.Data
                 var normal = new Category { Name = "Normal" };
                 var cheese = new Ingredient { Name = "Cheese" };
                 var pineapple = new Ingredient { Name = "Pineapple" };
+                var kebab = new Ingredient { Name = "Kebab" };
+                var banan = new Ingredient { Name = "Banan" };
                 var tomatoe = new Ingredient { Name = "Tomatoe" };
                 var ham = new Ingredient { Name = "Ham" };
                 var capricciosa = new Dish { Name = "Capricciosa", Price = 79 };

@@ -1,38 +1,49 @@
 ﻿@using System
 @using System.Linq
 @model SuperPizzeria.ViewModels.EditDishViewModel
-
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a href="#" data-dismiss="modal" class="class pull-right"><span class="glyphicon glyphicon-remove"></span></a>
-                <h3 class="modal-title">Edit</h3>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6 product_img">
-                        <img src="" class="img-responsive">
-                    </div>
-                    <div class="col-md-6 product_content">
-                        <p>@Model.Dish.Name</p>
-                        <h3 class="cost"><span class="glyphicon glyphicon-usd"></span>@Model.Dish.Price<small class="pre-cost"><span class="glyphicon glyphicon-usd"></span></small></h3>
+<script src="~/js/select2.js"></script>
+<link href="~/css/select2.css" rel="stylesheet" />
+    <form data-ajax="true" data-ajax-mode="GET" data-ajax-method="update" data-ajax-update="#Cart" asp-controller="Cart" asp-action="AddToCartItemToCart" method="post" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" data-dismiss="modal" class="class pull-right"><span class="glyphicon glyphicon-remove"></span></a>
+                    <h3 class="modal-title">@Model.Dish.Name</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 product_img">
+                            <img src="" class="img-responsive">
+                        </div>
+                        <div class="col-md-6 product_content">
+                            <p>@Model.Dish.Name</p>
+                            <h3 class="cost"><span class="glyphicon glyphicon-usd"></span>@Model.Dish.Price<small class="pre-cost"><span class="glyphicon glyphicon-usd"></span></small>
+                            </h3>
                             <!-- end col -->
                             <div class="col-md-4 col-sm-6 col-xs-12">
-                                @if (Model.Ingredients != null)
+                                @*@if (Model.Ingredients != null)
                                 {
-                                    var index = 0;
-
                                     foreach (var ingredient in Model.Ingredients)
                                     {
-                                        <p>@ingredient.Name</p>
-                                        <input name="Model.Ingredient[@index].Id" value=""/>//todo fix posting
-                                        <input name="Model.Ingredient[@index].Enabled" type="checkbox" @(Model.Dish.DishIngredients.Any(x => x.IngredientId == ingredient.Id) ? "checked=checked" : String.Empty)sp-for="@ingredient.Included"/>
-
-                                        index++;
+                                        <input asp-for="@ingredient.Included"type="checkbox"/>
+                                        <input type="hidden" asp-for="@ingredient.Id"/>
+                                        <label>@ingredient.Name</label>
                                     }
-                                }
-                                
+                                }*@
+                                <input type="hidden" asp-for="@Model.Dish.Id"/>
                             </div>
+                            <script type="text/javascript">
+                                $(".js-example-basic-multiple").select2();
+                            </script>
+                            <select asp-for="ingredientId" class="js-example-basic-multiple" multiple="multiple">
+                                @foreach (var ingredient in Model.Ingredients)
+                                {
+                                    <option value="@ingredient.Id">@ingredient.Name</option>
+                                }
+                                @*<option value="AL">Alabama</option>
+                                ...
+                                <option value="WY">Wyoming</option>*@
+                            </select>
                             <!-- end col -->
                             <div class="col-md-4 col-sm-12">
                                 <select class="form-control" name="select">
@@ -46,10 +57,14 @@
                         </div>
                         <div class="space-ten"></div>
                         <div class="btn-ground">
-                            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart</button>
+                            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart</button>
+                            @*<a asp-action="AddToCartItemToCart" asp-controller="Cart" asp-route-id="@Model.Dish.Id"
+                           data-ajax="true" data-ajax-mode="GET" data-ajax-method="update" data-ajax-update="#Cart">
+                            Add to cart
+                        </a>*@
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    
+</form>

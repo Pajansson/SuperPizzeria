@@ -24,10 +24,14 @@ namespace SuperPizzeria.Data
         {
             builder.Entity<DishIngredient>()
                 .HasKey(di => new {di.DishId, di.IngredientId});
+
             builder.Entity<CartItem>()
                 .HasKey(ci => new {ci.CartId, ci.DishId});
+
             builder.Entity<CartItemIngredient>()
                 .HasKey(cii => new {cii.CartItemId, cii.IngredientId});
+
+
             base.OnModelCreating(builder);
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.

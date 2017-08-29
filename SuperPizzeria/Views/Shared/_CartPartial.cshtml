@@ -7,9 +7,14 @@
         foreach (var cartItem in Model.CartItems)
          {
              <tr>
-                 <td>Dish: @cartItem.Dish.Name </td>
+                 <td> Dish: @cartItem.Dish.Name </td>
                  <td> Quantity: @cartItem.Quantity </td>
                  <td> Price each: @cartItem.Dish.Price </td>
+                 <td> Ingredients: @foreach (var i in cartItem.CartItemIngredients)
+                                   {
+                                       <p>@i.Ingredient.Name</p>
+                                   }
+                 </td>
              </tr>
          }
     }

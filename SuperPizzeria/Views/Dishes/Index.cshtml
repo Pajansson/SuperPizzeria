@@ -46,7 +46,6 @@
                 }
             </td>
             <td>
-                @*<a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
                 @if (User.IsInRole("Admin"))
                 {
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
@@ -57,13 +56,9 @@
                     <a asp-action="CustomizeDish" asp-controller="Cart"asp-route-id="@item.Id"
                        data-toggle="modal" data-target="#product_view"data-ajax="true" data-ajax-mode="GET" data-ajax-method="update" data-ajax-update="#product_view">Add to cart
                         </a>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#product_view"><i class="fa fa-search"></i> Quick View</button>
                 }
-
                 <div class="modal fade product_view" id="product_view">
                 </div>
-                
-                
             </td>
         </tr>
     }

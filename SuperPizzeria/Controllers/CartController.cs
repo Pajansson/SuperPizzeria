@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SuperPizzeria.Data;
 using SuperPizzeria.Models;
-using SuperPizzeria.ViewModels;
+using SuperPizzeria.ViewModels; 
 
 namespace SuperPizzeria.Controllers
 {
@@ -28,38 +26,61 @@ namespace SuperPizzeria.Controllers
             return View(await _context.Carts.ToListAsync());
         }
 
-        public IActionResult AddToCartItemToCart(int id)
+        [HttpPost]
+        public IActionResult AddToCartItemToCart(EditDishViewModel editDishViewModel)
         {
-            var dbdish = _context.Dishes.FirstOrDefault(x => x.Id == id);
-            var currentCart = GetCurrentCart();
-            var cartItem = new CartItem();
+            var dbIngredients = _context.Ingredients.ToList();
+            var dbdish = _context.Dishes.Include(i => i.DishIngredients).ThenInclude(di => di.Dish).FirstOrDefault(x => x.Id == editDishViewModel.Dish.Id);
+            var cartItem = new CartItem {Dish = dbdish, DishId = dbdish.Id};
 
-            cartItem.Dish = dbdish;
-            cartItem.CartItemIngredients = cartItem.Dish.DishIngredients.Select(x=> new CartItemIngredient(x.Ingredient)).ToList();
+            foreach (var dishIngredientId in editDishViewModel.ingredientId)
+            {
+                var cartItemIngredient =
+                    new CartItemIngredient {Ingredient = dbIngredients.Find(i => i.Id == dishIngredientId), CartItem = cartItem, IngredientId = dishIngredientId};
+                cartItem.CartItemIngredients.Add(cartItemIngredient);
+            }
+            
+            var currentCart = GetCurrentCart();
+
             currentCart.CartItems.Add(cartItem);
             SetCurrentCart(currentCart);
 
-            return PartialView("_CartPartial",currentCart);
+            return PartialView("_CartPartial", currentCart);
         }
 
         public IActionResult CustomizeDish(int id)
         {
             var dbdish = _context.Dishes.FirstOrDefault(x => x.Id == id);
             dbdish.DishIngredients = _context.DishIngredients.Where(x => x.DishId == dbdish.Id).ToList();
-            dbdish.DishIngredients.ForEach(i => i.Ingredient =_context.Ingredients.FirstOrDefault(x => x.Id == i.IngredientId));
+
             var customizeDishViewModel = new EditDishViewModel
             {
                 Dish = dbdish,
+                ingredientId = new List<int>(),
                 Ingredients = _context.Ingredients.ToList()
             };
-            //dbdish.DishIngredients = ingredientsList;
+            foreach (var dishIngredient in dbdish.DishIngredients)
+            {
+                customizeDishViewModel.ingredientId.Add(dishIngredient.IngredientId);
+            }
 
             return PartialView("_CartItemPartial", customizeDishViewModel);
         }
 
+        //public List<Ingredient> CheckIfIngredientIncluded(int dishIngredientId)
+        //{
+        //    var ingredients = _context.Ingredients.ToList();
+
+        //    foreach (var ingredient in ingredients.Where(x => x.Id == dishIngredientId))
+        //    {
+        //        ingredient.Included = true;
+        //    }
+        //    return ingredients;
+        //}
+
         public void SetCurrentCart(Cart cart)
         {
-            var serializedValue = JsonConvert.SerializeObject(cart);
+            var serializedValue = JsonConvert.SerializeObject(cart, new JsonSerializerSettings{ ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
             HttpContext.Session.SetString("Cart", serializedValue);
         }
 
