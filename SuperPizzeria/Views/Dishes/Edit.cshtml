@@ -25,10 +25,15 @@
             </div>
             <div class="form-group">
                 <label asp-for="Dish.DishIngredients" class="control-label"></label>
-                @foreach (var ingredient in Model.Ingredients)
-                {
-                   <p>@ingredient.Name</p> <input type="checkbox" asp-for="@ingredient.Included" />
-                }
+                <script type="text/javascript">
+                    $(".js-example-basic-multiple").select2();
+                </script>
+                <select asp-for="ingredientId" class="js-example-basic-multiple" multiple="multiple">
+                    @foreach (var ingredient in Model.Ingredients)
+                    {
+                        <option value="@ingredient.Id">@ingredient.Name</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />

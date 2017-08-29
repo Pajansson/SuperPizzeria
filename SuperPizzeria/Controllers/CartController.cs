@@ -31,7 +31,7 @@ namespace SuperPizzeria.Controllers
         {
             var dbIngredients = _context.Ingredients.ToList();
             var dbdish = _context.Dishes.Include(i => i.DishIngredients).ThenInclude(di => di.Dish).FirstOrDefault(x => x.Id == editDishViewModel.Dish.Id);
-            var cartItem = new CartItem {Dish = dbdish, DishId = dbdish.Id};
+            var cartItem = new CartItem {Dish = dbdish, DishId = dbdish.Id, Quantity = editDishViewModel.Quantity};
 
             foreach (var dishIngredientId in editDishViewModel.ingredientId)
             {
@@ -66,17 +66,6 @@ namespace SuperPizzeria.Controllers
 
             return PartialView("_CartItemPartial", customizeDishViewModel);
         }
-
-        //public List<Ingredient> CheckIfIngredientIncluded(int dishIngredientId)
-        //{
-        //    var ingredients = _context.Ingredients.ToList();
-
-        //    foreach (var ingredient in ingredients.Where(x => x.Id == dishIngredientId))
-        //    {
-        //        ingredient.Included = true;
-        //    }
-        //    return ingredients;
-        //}
 
         public void SetCurrentCart(Cart cart)
         {

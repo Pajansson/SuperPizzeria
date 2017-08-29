@@ -8,5 +8,6 @@ namespace SuperPizzeria.ViewModels
         public List<int> ingredientId { get; set; }
         public Dish Dish { get; set; }
         public List<Ingredient> Ingredients { get; set; }
+        public int Quantity { get; set; }
     }
 }

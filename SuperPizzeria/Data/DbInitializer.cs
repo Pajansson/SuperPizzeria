@@ -31,20 +31,41 @@ namespace SuperPizzeria.Data
                 var cheese = new Ingredient { Name = "Cheese" };
                 var pineapple = new Ingredient { Name = "Pineapple" };
                 var kebab = new Ingredient { Name = "Kebab" };
-                var banan = new Ingredient { Name = "Banan" };
+                var banana = new Ingredient { Name = "Banan" };
                 var tomatoe = new Ingredient { Name = "Tomatoe" };
                 var ham = new Ingredient { Name = "Ham" };
-                var capricciosa = new Dish { Name = "Capricciosa", Price = 79 };
-                var margaritha = new Dish { Name = "Margaritha", Price = 69 };
-                var hawaii = new Dish { Name = "Hawaii", Price = 85 };
+                var capricciosa = new Dish { Name = "Capricciosa", Price = 7 };
+                var margaritha = new Dish { Name = "Margaritha", Price = 6 };
+                var hawaii = new Dish { Name = "Hawaii", Price = 8 };
+
                 var capricciosaCheese = new DishIngredient { Dish = capricciosa, Ingredient = cheese };
                 var capricciosaTomatoe = new DishIngredient { Dish = capricciosa, Ingredient = tomatoe };
                 var capricciosaHam = new DishIngredient { Dish = capricciosa, Ingredient = ham };
+
+                var hawaiiHam = new DishIngredient { Dish = hawaii, Ingredient = ham };
+                var hawaiiCheese = new DishIngredient { Dish = hawaii, Ingredient = cheese };
+                var hawaiiPineapple = new DishIngredient { Dish = hawaii, Ingredient = pineapple };
+                
+                var margarithaCheese = new DishIngredient { Dish = margaritha, Ingredient = cheese };
+                var margarithaTomatoe = new DishIngredient { Dish = margaritha, Ingredient = tomatoe };
+
                 capricciosa.DishIngredients = new List<DishIngredient>();
                 capricciosa.DishIngredients.Add(capricciosaTomatoe);
                 capricciosa.DishIngredients.Add(capricciosaCheese);
                 capricciosa.DishIngredients.Add(capricciosaHam);
+
+                hawaii.DishIngredients = new List<DishIngredient>();
+                hawaii.DishIngredients.Add(hawaiiHam);
+                hawaii.DishIngredients.Add(hawaiiCheese);
+                hawaii.DishIngredients.Add(hawaiiPineapple);
+
+                margaritha.DishIngredients = new List<DishIngredient>();
+                margaritha.DishIngredients.Add(margarithaTomatoe);
+                margaritha.DishIngredients.Add(margarithaCheese);
+
                 context.Ingredients.Add(pineapple);
+                context.Ingredients.Add(kebab);
+                context.Ingredients.Add(banana);
                 context.Dishes.Add(capricciosa);
                 context.Dishes.Add(margaritha);
                 context.Dishes.Add(hawaii);
