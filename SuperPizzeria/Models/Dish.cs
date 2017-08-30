@@ -8,6 +8,8 @@ namespace SuperPizzeria.Models
         {
             DishIngredients = new List<DishIngredient>();
         }
+
+        public Category Category { get; set; }
         public int CategoryId { get; set; }
         public string Name { get; set; }
         public int Id { get; set; }

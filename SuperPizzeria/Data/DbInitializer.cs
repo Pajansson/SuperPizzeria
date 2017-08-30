@@ -27,16 +27,16 @@ namespace SuperPizzeria.Data
             if (context.Dishes.ToList().Count == 0)
             {
                 var vegetarian = new Category {Name = "Vegetarian"};
-                var normal = new Category { Name = "Normal" };
+                var notVegetarian = new Category { Name = "Not Vegetarian" };
                 var cheese = new Ingredient { Name = "Cheese" };
                 var pineapple = new Ingredient { Name = "Pineapple" };
                 var kebab = new Ingredient { Name = "Kebab" };
                 var banana = new Ingredient { Name = "Banan" };
                 var tomatoe = new Ingredient { Name = "Tomatoe" };
                 var ham = new Ingredient { Name = "Ham" };
-                var capricciosa = new Dish { Name = "Capricciosa", Price = 7 };
-                var margaritha = new Dish { Name = "Margaritha", Price = 6 };
-                var hawaii = new Dish { Name = "Hawaii", Price = 8 };
+                var capricciosa = new Dish { Name = "Capricciosa", Price = 7, Category = notVegetarian};
+                var margaritha = new Dish { Name = "Margaritha", Price = 6, Category = vegetarian };
+                var hawaii = new Dish { Name = "Hawaii", Price = 8, Category = notVegetarian };
 
                 var capricciosaCheese = new DishIngredient { Dish = capricciosa, Ingredient = cheese };
                 var capricciosaTomatoe = new DishIngredient { Dish = capricciosa, Ingredient = tomatoe };

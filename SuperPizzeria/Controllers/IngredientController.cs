@@ -1,40 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using SuperPizzeria.Data;
 using SuperPizzeria.Models;
-using SuperPizzeria.ViewModels;
 
 namespace SuperPizzeria.Controllers
 {
-    public class DishesController : Controller
+    public class IngredientController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public DishesController(ApplicationDbContext context)
+        public IngredientController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Dishes
+        // GET: Ingredient
         public async Task<IActionResult> Index()
         {
-            var dishes = new List<Dish>();
-            dishes = await _context.Dishes.ToListAsync();
-            foreach (var dish in dishes)
-            {
-                await Details(dish.Id);
-            }
-            var dishVm = new DishCartViewModel();
-            dishVm.Dishes = dishes;
-            return View(dishVm);
+            return View(await _context.Ingredients.ToListAsync());
         }
 
-        // GET: Dishes/Details/5
+        // GET: Ingredient/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -42,73 +33,62 @@ namespace SuperPizzeria.Controllers
                 return NotFound();
             }
 
-            var dish = await _context.Dishes
-                .Include(c => c.Category)
-                .Include(d => d.DishIngredients)
-                .ThenInclude(di => di.Ingredient)
+            var ingredient = await _context.Ingredients
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (dish == null)
+            if (ingredient == null)
             {
                 return NotFound();
             }
 
-            return View(dish);
+            return View(ingredient);
         }
 
-        // GET: Dishes/Create
+        // GET: Ingredient/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Dishes/Create
+        // POST: Ingredient/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Id,Price")] Dish dish)
+        public async Task<IActionResult> Create([Bind("Name,Id")] Ingredient ingredient)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(dish);
+                _context.Add(ingredient);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(dish);
+            return View(ingredient);
         }
 
-        // GET: Dishes/Edit/5
+        // GET: Ingredient/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var dbdish = _context.Dishes.FirstOrDefault(x => x.Id == id);
-            dbdish.DishIngredients = _context.DishIngredients.Where(x => x.DishId == dbdish.Id).ToList();
 
-            var customizeDishViewModel = new EditDishViewModel
+            var ingredient = await _context.Ingredients.SingleOrDefaultAsync(m => m.Id == id);
+            if (ingredient == null)
             {
-                Dish = dbdish,
-                ingredientId = new List<int>(),
-                Ingredients = _context.Ingredients.ToList()
-            };
-            foreach (var dishIngredient in dbdish.DishIngredients)
-            {
-                customizeDishViewModel.ingredientId.Add(dishIngredient.IngredientId);
+                return NotFound();
             }
-
-            return View(customizeDishViewModel);
+            return View(ingredient);
         }
 
-        // POST: Dishes/Edit/5
+        // POST: Ingredient/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Id,Price")] Dish dish)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Id")] Ingredient ingredient)
         {
-            if (id != dish.Id)
+            if (id != ingredient.Id)
             {
                 return NotFound();
             }
@@ -117,12 +97,12 @@ namespace SuperPizzeria.Controllers
             {
                 try
                 {
-                    _context.Update(dish);
+                    _context.Update(ingredient);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DishExists(dish.Id))
+                    if (!IngredientExists(ingredient.Id))
                     {
                         return NotFound();
                     }
@@ -133,10 +113,10 @@ namespace SuperPizzeria.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(dish);
+            return View(ingredient);
         }
 
-        // GET: Dishes/Delete/5
+        // GET: Ingredient/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -144,30 +124,30 @@ namespace SuperPizzeria.Controllers
                 return NotFound();
             }
 
-            var dish = await _context.Dishes
+            var ingredient = await _context.Ingredients
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (dish == null)
+            if (ingredient == null)
             {
                 return NotFound();
             }
 
-            return View(dish);
+            return View(ingredient);
         }
 
-        // POST: Dishes/Delete/5
+        // POST: Ingredient/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var dish = await _context.Dishes.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Dishes.Remove(dish);
+            var ingredient = await _context.Ingredients.SingleOrDefaultAsync(m => m.Id == id);
+            _context.Ingredients.Remove(ingredient);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DishExists(int id)
+        private bool IngredientExists(int id)
         {
-            return _context.Dishes.Any(e => e.Id == id);
+            return _context.Ingredients.Any(e => e.Id == id);
         }
     }
 }

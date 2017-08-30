@@ -26,6 +26,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Dishes[0].DishIngredients)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Dishes[0].Category)
+        </th>
     </tr>
     </thead>
     <tbody>
@@ -44,6 +47,9 @@
                         @Html.DisplayFor(modelItem => ingredient.Ingredient.Name)
                     </p>
                 }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
             </td>
             <td>
                 @if (User.IsInRole("Admin"))
@@ -68,5 +74,5 @@
 
 </div>
 <div id="Cart">
-        
+         
 </div>

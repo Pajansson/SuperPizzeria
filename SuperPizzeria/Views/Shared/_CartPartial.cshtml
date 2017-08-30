@@ -22,4 +22,4 @@
     
 </table>
 <h2> Total: @Model.CartItems.Sum((x => x.Dish.Price * x.Quantity))$</h2>
-<a asp-controller="Tomasos" asp-action="CheckOut">Till kassan</a>
+<a asp-controller="Cart" asp-action="CheckOut">Check out</a>
