@@ -1,4 +1,6 @@
-﻿@using Microsoft.AspNetCore.Mvc.Rendering
+﻿@using System.Linq
+@using Microsoft.AspNetCore.Mvc
+@using Microsoft.AspNetCore.Mvc.Rendering
 @using SuperPizzeria.ViewModels
 @model SuperPizzeria.ViewModels.DishCartViewModel
 
@@ -71,8 +73,12 @@
     </tbody>
 </table>
 <div id="EditCartItem">
-
 </div>
 <div id="Cart">
-         
+    @if (Model.Cart.CartItems.Count != 0)
+    {
+        { await
+            Html.RenderPartialAsync("_CartPartial", Model.Cart);
+        }
+    }
 </div>

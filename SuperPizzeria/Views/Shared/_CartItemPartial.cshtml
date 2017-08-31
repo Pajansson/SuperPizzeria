@@ -1,5 +1,6 @@
 ﻿@model SuperPizzeria.ViewModels.EditDishViewModel
 <script src="~/js/select2.js"></script>
+<script src="~/js/site.js"></script>
 <link href="~/css/select2.css" rel="stylesheet" />
     <form data-ajax="true" data-ajax-mode="GET" data-ajax-method="update" data-ajax-update="#Cart" asp-controller="Cart" asp-action="AddToCartItemToCart" method="post" >
         <div class="modal-dialog">
@@ -41,7 +42,7 @@
                         </div>
                         <div class="space-ten"></div>
                         <div class="btn-ground">
-                            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart</button>
+                            <button id="submitbtn"type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart</button>
                         </div>
                     </div>
                 </div>

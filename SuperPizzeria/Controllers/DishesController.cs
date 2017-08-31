@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SuperPizzeria.Data;
@@ -23,16 +24,29 @@ namespace SuperPizzeria.Controllers
         // GET: Dishes
         public async Task<IActionResult> Index()
         {
-            var dishes = new List<Dish>();
-            dishes = await _context.Dishes.ToListAsync();
+            var dishes = await _context.Dishes.ToListAsync();
             foreach (var dish in dishes)
             {
                 await Details(dish.Id);
             }
-            var dishVm = new DishCartViewModel();
-            dishVm.Dishes = dishes;
+            var dishVm = new DishCartViewModel {Dishes = dishes};
+            dishVm.Cart = GetCurrentCart();
             return View(dishVm);
         }
+
+
+        public Cart GetCurrentCart()
+        {
+            Cart cart = null;
+
+            if (HttpContext.Session.GetString("Cart") != null)
+            {
+                var temp = HttpContext.Session.GetString("Cart");
+                cart = JsonConvert.DeserializeObject<Cart>(temp);
+            }
+
+            return cart ?? new Cart();
+        } //todo lyft ut till service
 
         // GET: Dishes/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -92,9 +106,9 @@ namespace SuperPizzeria.Controllers
                 Dish = dbdish,
                 ingredientId = new List<int>(),
                 Ingredients = _context.Ingredients.ToList(),
-                Categories = _context.Categories.ToList() 
+                Categories = _context.Categories.ToList()
             };
-            
+
             foreach (var dishIngredient in dbdish.DishIngredients)
             {
                 customizeDishViewModel.ingredientId.Add(dishIngredient.IngredientId);
@@ -116,7 +130,7 @@ namespace SuperPizzeria.Controllers
                 try
                 {
                     var dbdish = _context.Dishes.FirstOrDefault(x => x.Id == editDishViewModel.Dish.Id);
-                    
+
                     var tempDishIng = new List<DishIngredient>();
                     tempDishIng = _context.DishIngredients.Where(di => di.DishId == editDishViewModel.Dish.Id).ToList();
 
@@ -126,16 +140,19 @@ namespace SuperPizzeria.Controllers
                     }
                     _context.SaveChanges();
 
-                    var dbIngredients = _context.Ingredients.Where(x=> editDishViewModel.ingredientId.Contains(x.Id)).ToList();
-                    dbdish.Category = _context.Categories.FirstOrDefault(c => c.Id == editDishViewModel.Dish.CategoryId);
+                    var dbIngredients = _context.Ingredients.Where(x => editDishViewModel.ingredientId.Contains(x.Id))
+                        .ToList();
+                    dbdish.Category =
+                        _context.Categories.FirstOrDefault(c => c.Id == editDishViewModel.Dish.CategoryId);
                     dbdish.CategoryId = editDishViewModel.Dish.CategoryId;
                     dbdish.Name = editDishViewModel.Dish.Name;
                     dbdish.Price = editDishViewModel.Dish.Price;
-                    
+
                     foreach (var ingredient in dbIngredients)
                     {
-                            var dishIngredient = new DishIngredient { Ingredient = ingredient, Dish = dbdish, IngredientId = ingredient.Id };
-                            _context.DishIngredients.Add(dishIngredient);
+                        var dishIngredient =
+                            new DishIngredient {Ingredient = ingredient, Dish = dbdish, IngredientId = ingredient.Id};
+                        _context.DishIngredients.Add(dishIngredient);
                     }
                     _context.Update(dbdish);
                     _context.SaveChanges();

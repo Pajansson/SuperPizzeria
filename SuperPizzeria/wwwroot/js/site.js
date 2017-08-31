@@ -1,1 +1,5 @@
-﻿// Write your JavaScript code.
+﻿$(function () {
+    $("#submitbtn").click(function () {
+        $(".modal-dialog").toggle();
+    });
+});
