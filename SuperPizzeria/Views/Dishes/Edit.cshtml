@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" asp-controller="Dishes" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Dish.Id" />
                 <div class="form-group">
@@ -22,6 +22,20 @@
                 <label asp-for="Dish.Price" class="control-label"></label>
                 <input asp-for="Dish.Price" class="form-control"/>
                 <span asp-validation-for="Dish.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Dish.Category" class="control-label"></label>
+                @foreach (var category in Model.Categories)
+                {
+                    if (category.Id == Model.Dish.CategoryId)
+                    {
+                        <input type="radio" checked="checked" asp-for="@Model.Dish.CategoryId" value="@category.Id" />@category.Name
+                    }
+                    else
+                    {
+                        <input type="radio" asp-for="@Model.Dish.CategoryId" value="@category.Id" />@category.Name
+                    }  
+                }
             </div>
             <div class="form-group">
                 <label asp-for="Dish.DishIngredients" class="control-label"></label>

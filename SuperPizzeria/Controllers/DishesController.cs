@@ -91,8 +91,10 @@ namespace SuperPizzeria.Controllers
             {
                 Dish = dbdish,
                 ingredientId = new List<int>(),
-                Ingredients = _context.Ingredients.ToList()
+                Ingredients = _context.Ingredients.ToList(),
+                Categories = _context.Categories.ToList() 
             };
+            
             foreach (var dishIngredient in dbdish.DishIngredients)
             {
                 customizeDishViewModel.ingredientId.Add(dishIngredient.IngredientId);
@@ -106,23 +108,41 @@ namespace SuperPizzeria.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Id,Price")] Dish dish)
+        //public async Task<IActionResult> Edit(int id, [Bind("Name,Id,Price")] Dish dish)
+        public async Task<IActionResult> Edit(EditDishViewModel editDishViewModel)
         {
-            if (id != dish.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(dish);
-                    await _context.SaveChangesAsync();
+                    var dbdish = _context.Dishes.FirstOrDefault(x => x.Id == editDishViewModel.Dish.Id);
+                    
+                    var tempDishIng = new List<DishIngredient>();
+                    tempDishIng = _context.DishIngredients.Where(di => di.DishId == editDishViewModel.Dish.Id).ToList();
+
+                    foreach (var item in tempDishIng)
+                    {
+                        _context.DishIngredients.Remove(item);
+                    }
+                    _context.SaveChanges();
+
+                    var dbIngredients = _context.Ingredients.Where(x=> editDishViewModel.ingredientId.Contains(x.Id)).ToList();
+                    dbdish.Category = _context.Categories.FirstOrDefault(c => c.Id == editDishViewModel.Dish.CategoryId);
+                    dbdish.CategoryId = editDishViewModel.Dish.CategoryId;
+                    dbdish.Name = editDishViewModel.Dish.Name;
+                    dbdish.Price = editDishViewModel.Dish.Price;
+                    
+                    foreach (var ingredient in dbIngredients)
+                    {
+                            var dishIngredient = new DishIngredient { Ingredient = ingredient, Dish = dbdish, IngredientId = ingredient.Id };
+                            _context.DishIngredients.Add(dishIngredient);
+                    }
+                    _context.Update(dbdish);
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DishExists(dish.Id))
+                    if (!DishExists(editDishViewModel.Dish.Id))
                     {
                         return NotFound();
                     }
@@ -133,7 +153,7 @@ namespace SuperPizzeria.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(dish);
+            return View(editDishViewModel);
         }
 
         // GET: Dishes/Delete/5

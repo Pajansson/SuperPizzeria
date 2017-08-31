@@ -20,6 +20,5 @@ namespace SuperPizzeria.Models
         public int DishId { get; set; }
         public int Quantity { get; set; }
         public List<CartItemIngredient> CartItemIngredients { get; set; }
-        //public Guid IdGenerator { get { return Guid.NewGuid(); } }
     }
 }
