@@ -8,13 +8,18 @@
         foreach (var cartItem in Model.CartItems)
          {
              <tr>
+                 <td>@cartItem.CartItemId</td>
                  <td> Dish: @cartItem.Dish.Name </td>
                  <td> Quantity: @cartItem.Quantity </td>
                  <td> Price each: @cartItem.Dish.Price$ </td>
-                 <td> Ingredients: @foreach (var i in cartItem.CartItemIngredients)
-                                   {
-                                       <td>@i.Ingredient.Name</td>
-                                   }
+                 <td> Ingredients: </td>@foreach (var i in cartItem.CartItemIngredients)
+                                        {
+                                            <td>@i.Ingredient.Name</td>
+                                        }
+                 <td>
+                     <a asp-action="RemoveCartItem" asp-controller="Cart" asp-route-id="@cartItem.CartItemId"
+                        data-target="#Cart"data-ajax="true" data-ajax-mode="GET" data-ajax-method="get" data-ajax-update="#Cart"> Remove
+                     </a>
                  </td>
              </tr>
          }

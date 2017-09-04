@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SuperPizzeria.Data;
 using SuperPizzeria.Models;
-using SuperPizzeria.ViewModels; 
+using SuperPizzeria.ViewModels;
 
 namespace SuperPizzeria.Controllers
 {
@@ -30,20 +31,32 @@ namespace SuperPizzeria.Controllers
         public IActionResult AddToCartItemToCart(EditDishViewModel editDishViewModel)
         {
             var dbIngredients = _context.Ingredients.ToList();
-            var dbdish = _context.Dishes.Include(i => i.DishIngredients).ThenInclude(di => di.Dish).FirstOrDefault(x => x.Id == editDishViewModel.Dish.Id);
-            var cartItem = new CartItem {Dish = dbdish, DishId = dbdish.Id, Quantity = editDishViewModel.Quantity};
-
+            var dbdish = _context.Dishes.Include(i => i.DishIngredients).ThenInclude(di => di.Dish)
+                .FirstOrDefault(x => x.Id == editDishViewModel.Dish.Id);
+            var cartItem = new CartItem
+            {
+                Dish = dbdish,
+                DishId = dbdish.Id,
+                Quantity = editDishViewModel.Quantity
+            };
+            
             foreach (var dishIngredientId in editDishViewModel.ingredientId)
             {
                 var cartItemIngredient =
-                    new CartItemIngredient {Ingredient = dbIngredients.Find(i => i.Id == dishIngredientId), CartItem = cartItem, IngredientId = dishIngredientId};
+                    new CartItemIngredient
+                    {
+                        Ingredient = dbIngredients.Find(i => i.Id == dishIngredientId),
+                        CartItem = cartItem,
+                        IngredientId = dishIngredientId
+                    };
                 cartItem.CartItemIngredients.Add(cartItemIngredient);
             }
-            
+
             var currentCart = GetCurrentCart();
 
             currentCart.CartItems.Add(cartItem);
             SetCurrentCart(currentCart);
+            //_context.CartItems.Add(cartItem);
 
             return PartialView("_CartPartial", currentCart);
         }
@@ -69,7 +82,8 @@ namespace SuperPizzeria.Controllers
 
         public void SetCurrentCart(Cart cart)
         {
-            var serializedValue = JsonConvert.SerializeObject(cart, new JsonSerializerSettings{ ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            var serializedValue = JsonConvert.SerializeObject(cart,
+                new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore});
             HttpContext.Session.SetString("Cart", serializedValue);
         }
 
@@ -83,8 +97,8 @@ namespace SuperPizzeria.Controllers
                 cart = JsonConvert.DeserializeObject<Cart>(temp);
             }
 
-            return cart??new Cart();
-        }//todo lyft ut till service
+            return cart ?? new Cart();
+        } //todo lyft ut till service
 
         // GET: Cart/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -141,7 +155,7 @@ namespace SuperPizzeria.Controllers
             }
             return View(cart);
         }
-
+        
         // POST: Cart/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -193,6 +207,16 @@ namespace SuperPizzeria.Controllers
             }
 
             return View(cart);
+        }
+
+        public IActionResult RemoveCartItem(Guid id)
+        {
+            var currentCart = GetCurrentCart();
+            var cartItem = currentCart.CartItems.FirstOrDefault(ci => ci.CartItemId == id);
+            currentCart.CartItems.Remove(cartItem);
+            SetCurrentCart(currentCart);
+
+            return PartialView("_CartPartial", currentCart);
         }
 
         // POST: Cart/Delete/5

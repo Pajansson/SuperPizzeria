@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SuperPizzeria.Data;
@@ -29,11 +28,13 @@ namespace SuperPizzeria.Controllers
             {
                 await Details(dish.Id);
             }
-            var dishVm = new DishCartViewModel {Dishes = dishes};
-            dishVm.Cart = GetCurrentCart();
+            var dishVm = new DishCartViewModel
+            {
+                Dishes = dishes,
+                Cart = GetCurrentCart()
+            };
             return View(dishVm);
         }
-
 
         public Cart GetCurrentCart()
         {
