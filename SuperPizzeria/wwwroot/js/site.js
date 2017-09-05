@@ -1,5 +1,5 @@
 ﻿$(function () {
     $("#submitbtn").click(function () {
-        $(".modal-dialog").toggle();
+        $("#product_view").modal("hide");
     });
 });

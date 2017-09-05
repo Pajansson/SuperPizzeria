@@ -31,7 +31,7 @@ namespace SuperPizzeria.Controllers
             var dishVm = new DishCartViewModel
             {
                 Dishes = dishes,
-                Cart = GetCurrentCart()
+                Cart = GetCurrentCart(),
             };
             return View(dishVm);
         }
@@ -73,23 +73,56 @@ namespace SuperPizzeria.Controllers
         // GET: Dishes/Create
         public IActionResult Create()
         {
-            return View();
+            var createDishVm = new EditDishViewModel
+            {
+                Categories = _context.Categories.ToList(),
+                Ingredients = _context.Ingredients.ToList(),
+            };
+
+            return View(createDishVm);
         }
 
         // POST: Dishes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Name,Id,Price")] Dish dish)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(dish);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(dish);
+        //}
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Id,Price")] Dish dish)
+        public IActionResult Create(EditDishViewModel editDishViewModel)
         {
-            if (ModelState.IsValid)
+            var newDish = new Dish();
+            newDish.Category = _context.Categories.FirstOrDefault(c => c.Id == editDishViewModel.Dish.CategoryId);
+            newDish.Name = editDishViewModel.Dish.Name;
+            newDish.Price = editDishViewModel.Dish.Price;
+            
+            newDish.DishIngredients = new List<DishIngredient>();
+            var dbIngredients = _context.Ingredients.ToList();
+            foreach (var dishIngredientId in editDishViewModel.ingredientId)
             {
-                _context.Add(dish);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var dishIngredient =
+                    new DishIngredient
+                    {
+                        Ingredient = dbIngredients.Find(i => i.Id == dishIngredientId),
+                        Dish = newDish,
+                        IngredientId = dishIngredientId
+                    };
+                newDish.DishIngredients.Add(dishIngredient);
             }
-            return View(dish);
+            _context.Dishes.Add(newDish);
+            _context.SaveChanges();
+            var dishes = new DishCartViewModel();
+            dishes.Dishes = _context.Dishes.ToList();
+            return RedirectToAction("Index", "Dishes");
         }
 
         // GET: Dishes/Edit/5
