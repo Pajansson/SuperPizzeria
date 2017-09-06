@@ -5,7 +5,7 @@ namespace SuperPizzeria.ViewModels
 {
     public class EditDishViewModel
     {
-        public List<int> ingredientId { get; set; }
+        public List<int> IngredientId { get; set; }
         public Dish Dish { get; set; }
         public List<Ingredient> Ingredients { get; set; }
         public int Quantity { get; set; }

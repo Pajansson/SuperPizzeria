@@ -100,24 +100,30 @@ namespace SuperPizzeria.Controllers
         [HttpPost]
         public IActionResult Create(EditDishViewModel editDishViewModel)
         {
-            var newDish = new Dish();
-            newDish.Category = _context.Categories.FirstOrDefault(c => c.Id == editDishViewModel.Dish.CategoryId);
-            newDish.Name = editDishViewModel.Dish.Name;
-            newDish.Price = editDishViewModel.Dish.Price;
-            
-            newDish.DishIngredients = new List<DishIngredient>();
-            var dbIngredients = _context.Ingredients.ToList();
-            foreach (var dishIngredientId in editDishViewModel.ingredientId)
+            var newDish = new Dish
             {
-                var dishIngredient =
-                    new DishIngredient
-                    {
-                        Ingredient = dbIngredients.Find(i => i.Id == dishIngredientId),
-                        Dish = newDish,
-                        IngredientId = dishIngredientId
-                    };
-                newDish.DishIngredients.Add(dishIngredient);
+                Category = _context.Categories.FirstOrDefault(c => c.Id == editDishViewModel.Dish.CategoryId),
+                Name = editDishViewModel.Dish.Name,
+                Price = editDishViewModel.Dish.Price,
+                DishIngredients = new List<DishIngredient>()
+            };
+
+            var dbIngredients = _context.Ingredients.ToList();
+            if (editDishViewModel.IngredientId != null)
+            {
+                foreach (var dishIngredientId in editDishViewModel.IngredientId)
+                {
+                    var dishIngredient =
+                        new DishIngredient
+                        {
+                            Ingredient = dbIngredients.Find(i => i.Id == dishIngredientId),
+                            Dish = newDish,
+                            IngredientId = dishIngredientId
+                        };
+                    newDish.DishIngredients.Add(dishIngredient);
+                }
             }
+            
             _context.Dishes.Add(newDish);
             _context.SaveChanges();
             var dishes = new DishCartViewModel();
@@ -138,14 +144,14 @@ namespace SuperPizzeria.Controllers
             var customizeDishViewModel = new EditDishViewModel
             {
                 Dish = dbdish,
-                ingredientId = new List<int>(),
+                IngredientId = new List<int>(),
                 Ingredients = _context.Ingredients.ToList(),
                 Categories = _context.Categories.ToList()
             };
 
             foreach (var dishIngredient in dbdish.DishIngredients)
             {
-                customizeDishViewModel.ingredientId.Add(dishIngredient.IngredientId);
+                customizeDishViewModel.IngredientId.Add(dishIngredient.IngredientId);
             }
 
             return View(customizeDishViewModel);
@@ -174,7 +180,7 @@ namespace SuperPizzeria.Controllers
                     }
                     _context.SaveChanges();
 
-                    var dbIngredients = _context.Ingredients.Where(x => editDishViewModel.ingredientId.Contains(x.Id))
+                    var dbIngredients = _context.Ingredients.Where(x => editDishViewModel.IngredientId.Contains(x.Id))
                         .ToList();
                     dbdish.Category =
                         _context.Categories.FirstOrDefault(c => c.Id == editDishViewModel.Dish.CategoryId);
@@ -231,6 +237,12 @@ namespace SuperPizzeria.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var dish = await _context.Dishes.SingleOrDefaultAsync(m => m.Id == id);
+            var dishIngredients = await _context.DishIngredients.ToArrayAsync();
+
+            foreach (var dishIngredient in dishIngredients.Where(dii => dii.DishId == dish.Id))
+            {
+                _context.DishIngredients.Remove(dishIngredient);
+            }
             _context.Dishes.Remove(dish);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

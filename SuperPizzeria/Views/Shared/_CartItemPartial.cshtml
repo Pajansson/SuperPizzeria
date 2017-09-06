@@ -23,7 +23,7 @@
                             <script type="text/javascript">
                                 $(".js-example-basic-multiple").select2();
                             </script>
-                            <select asp-for="ingredientId" class="js-example-basic-multiple" multiple="multiple">
+                            <select asp-for="IngredientId" class="js-example-basic-multiple" multiple="multiple">
                                 @foreach (var ingredient in Model.Ingredients)
                                 {
                                     <option value="@ingredient.Id">@ingredient.Name</option>

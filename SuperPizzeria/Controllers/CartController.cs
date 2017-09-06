@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -12,6 +13,7 @@ using SuperPizzeria.ViewModels;
 
 namespace SuperPizzeria.Controllers
 {
+
     public class CartController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -40,7 +42,7 @@ namespace SuperPizzeria.Controllers
                 Quantity = editDishViewModel.Quantity
             };
             
-            foreach (var dishIngredientId in editDishViewModel.ingredientId)
+            foreach (var dishIngredientId in editDishViewModel.IngredientId)
             {
                 var cartItemIngredient =
                     new CartItemIngredient
@@ -69,12 +71,12 @@ namespace SuperPizzeria.Controllers
             var customizeDishViewModel = new EditDishViewModel
             {
                 Dish = dbdish,
-                ingredientId = new List<int>(),
+                IngredientId = new List<int>(),
                 Ingredients = _context.Ingredients.ToList()
             };
             foreach (var dishIngredient in dbdish.DishIngredients)
             {
-                customizeDishViewModel.ingredientId.Add(dishIngredient.IngredientId);
+                customizeDishViewModel.IngredientId.Add(dishIngredient.IngredientId);
             }
 
             return PartialView("_CartItemPartial", customizeDishViewModel);
@@ -141,55 +143,55 @@ namespace SuperPizzeria.Controllers
         }
 
         // GET: Cart/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var cart = await _context.Carts.SingleOrDefaultAsync(m => m.Id == id);
-            if (cart == null)
-            {
-                return NotFound();
-            }
-            return View(cart);
-        }
+        //    var cart = await _context.Carts.SingleOrDefaultAsync(m => m.Id == id);
+        //    if (cart == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(cart);
+        //}
         
         // POST: Cart/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ApplicationUserId")] Cart cart)
-        {
-            if (id != cart.Id)
-            {
-                return NotFound();
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("Id,ApplicationUserId")] Cart cart)
+        //{
+        //    if (id != cart.Id)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(cart);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CartExists(cart.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(cart);
-        }
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(cart);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!CartExists(cart.Id))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(cart);
+        //}
 
         // GET: Cart/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -229,10 +231,18 @@ namespace SuperPizzeria.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        
+        //public IActionResult CheckOut(Cart cart)
+        //{
+        //    if (SignInManager.IsSignedIn(User))
+        //    {
+                
+        //    }
+        //}
 
-        private bool CartExists(int id)
-        {
-            return _context.Carts.Any(e => e.Id == id);
-        }
+        //private bool CartExists(int id)
+        //{
+        //    return _context.Carts.Any(e => e.Id == id);
+        //}
     }
 }
