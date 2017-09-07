@@ -62,14 +62,31 @@ namespace SuperPizzeria.Controllers
             var order = new Order
             {
                 Cart = GetCurrentCart()
-                //todo tilldela resterande proppar
             };
             if (_signInManager.IsSignedIn(User))
             {
                 var user = _userManager.GetCurrentUser(HttpContext);
                 order.ApplicationUser = user.Result;
             }
+            else
+            {
+                order.ApplicationUser = new ApplicationUser();
+            }
                 return View(order);
+        }
+        [HttpPost]
+        public IActionResult Create(Order order)
+        {
+            var newOrder = new Order
+            {
+                ApplicationUser = order.ApplicationUser,
+                Cart = order.Cart,
+                CartId = order.CartId
+            };
+            _context.Orders.Add(newOrder);
+            _context.SaveChanges();
+            HttpContext.Session.Clear();
+            return View("ThanksForOrder");
         }
 
         public Cart GetCurrentCart()

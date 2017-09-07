@@ -65,14 +65,14 @@
                         <div class="form-group">
                             <div class="col-md-12"><strong>Adress:</strong></div>
                             <div class="col-md-12">
-                                <input asp-for="@Model.ApplicationUser.Adress" class="form-control" />
+                                <input required="true" asp-for="@Model.ApplicationUser.Adress" class="form-control" />
                                 <span asp-validation-for="@Model.ApplicationUser.Adress" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-12"><strong>Email:</strong></div>
                             <div class="col-md-12">
-                                <input asp-for="@Model.ApplicationUser.Email" class="form-control" />
+                                <input required="true" asp-for="@Model.ApplicationUser.Email" class="form-control" />
                                 <span asp-validation-for="@Model.ApplicationUser.Email" class="text-danger"></span>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-12"><strong>Credit Card Number:</strong></div>
-                            <div class="col-md-12"><input type="text" class="form-control" name="car_number" value="" /></div>
+                            <div class="col-md-12"><input required="true" type="text" class="form-control" name="car_number" value="" /></div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-12"><strong>Card CVV:</strong></div>
