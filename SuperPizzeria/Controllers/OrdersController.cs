@@ -23,9 +23,11 @@ namespace SuperPizzeria.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
 
-        public OrdersController(ApplicationDbContext context)
+        public OrdersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         // GET: Orders
@@ -59,15 +61,15 @@ namespace SuperPizzeria.Controllers
         {
             var order = new Order
             {
-                Cart = GetCurrentCart(),
+                Cart = GetCurrentCart()
                 //todo tilldela resterande proppar
             };
             if (_signInManager.IsSignedIn(User))
             {
-                
+                var user = _userManager.GetCurrentUser(HttpContext);
+                order.ApplicationUser = user.Result;
             }
-
-                return View();
+                return View(order);
         }
 
         public Cart GetCurrentCart()

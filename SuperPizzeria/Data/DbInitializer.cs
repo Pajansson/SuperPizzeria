@@ -12,6 +12,7 @@ namespace SuperPizzeria.Data
             var aUser = new ApplicationUser();
             aUser.UserName = "student@test.com";
             aUser.Email = "student@test.com";
+            aUser.Adress = "Gatan123";
             var r = userManager.CreateAsync(aUser, "Pa$$w0rd").Result;
 
             var adminRole = new IdentityRole { Name = "Admin" };

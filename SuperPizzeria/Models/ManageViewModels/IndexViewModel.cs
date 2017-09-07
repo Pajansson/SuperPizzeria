@@ -20,6 +20,9 @@ namespace SuperPizzeria.Models.ManageViewModels
         [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }
 
+        [Display(Name = "Address")]
+        public string Address { get; set; }
+
         public string StatusMessage { get; set; }
     }
 }

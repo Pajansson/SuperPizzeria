@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SuperPizzeria.Data;
 using SuperPizzeria.Models;
 using SuperPizzeria.Models.ManageViewModels;
 using SuperPizzeria.Services;
@@ -20,6 +21,7 @@ namespace SuperPizzeria.Controllers
     [Route("[controller]/[action]")]
     public class ManageController : Controller
     {
+        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
@@ -33,8 +35,11 @@ namespace SuperPizzeria.Controllers
           SignInManager<ApplicationUser> signInManager,
           IEmailSender emailSender,
           ILogger<ManageController> logger,
+          ApplicationDbContext context,
           UrlEncoder urlEncoder)
+
         {
+            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
@@ -60,7 +65,8 @@ namespace SuperPizzeria.Controllers
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
-                StatusMessage = StatusMessage
+                StatusMessage = StatusMessage,
+                Address = user.Adress
             };
 
             return View(model);
@@ -100,6 +106,10 @@ namespace SuperPizzeria.Controllers
                     throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
                 }
             }
+
+            user.Adress = model.Address;
+            await _userManager.UpdateAsync(user);
+
 
             StatusMessage = "Your profile has been updated";
             return RedirectToAction(nameof(Index));

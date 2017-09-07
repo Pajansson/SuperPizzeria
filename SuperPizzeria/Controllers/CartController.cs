@@ -87,7 +87,7 @@ namespace SuperPizzeria.Controllers
             var serializedValue = JsonConvert.SerializeObject(cart,
                 new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore});
             HttpContext.Session.SetString("Cart", serializedValue);
-        }
+        }//todo lyft ut till service
 
         public Cart GetCurrentCart()
         {
