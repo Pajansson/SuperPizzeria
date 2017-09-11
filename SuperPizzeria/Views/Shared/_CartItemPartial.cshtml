@@ -26,7 +26,7 @@
                             <select asp-for="IngredientId" class="js-example-basic-multiple" multiple="multiple">
                                 @foreach (var ingredient in Model.Ingredients)
                                 {
-                                    <option value="@ingredient.Id">@ingredient.Name</option>
+                                    <option value="@ingredient.Id">@ingredient.Name @ingredient.Price$</option>
                                 }
                             </select>
                             <!-- end col -->

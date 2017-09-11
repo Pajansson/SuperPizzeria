@@ -32,7 +32,7 @@ namespace SuperPizzeria.Data
                 var cheese = new Ingredient { Name = "Cheese", Price = 1};
                 var pineapple = new Ingredient { Name = "Pineapple", Price = 1};
                 var kebab = new Ingredient { Name = "Kebab", Price = 2};
-                var banana = new Ingredient { Name = "Banan", Price = 1};
+                var banana = new Ingredient { Name = "Banana", Price = 1};
                 var tomatoe = new Ingredient { Name = "Tomatoe", Price = 1};
                 var ham = new Ingredient { Name = "Ham", Price = 1};
 
