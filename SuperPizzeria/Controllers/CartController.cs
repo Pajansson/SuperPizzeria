@@ -39,26 +39,31 @@ namespace SuperPizzeria.Controllers
             {
                 Dish = dbdish,
                 DishId = dbdish.Id,
-                Quantity = editDishViewModel.Quantity
+                Quantity = editDishViewModel.Quantity,
+                Price = dbdish.Price
             };
-            
-            foreach (var dishIngredientId in editDishViewModel.IngredientId)
+            foreach (var dishIngredient in cartItem.Dish.DishIngredients)
+            {
+                dishIngredient.Ingredient.Price = 0;
+            }
+
+            foreach (var cartItemIngredientId in editDishViewModel.IngredientId)
             {
                 var cartItemIngredient =
                     new CartItemIngredient
                     {
-                        Ingredient = dbIngredients.Find(i => i.Id == dishIngredientId),
+                        Ingredient = dbIngredients.Find(i => i.Id == cartItemIngredientId),
                         CartItem = cartItem,
-                        IngredientId = dishIngredientId
+                        IngredientId = cartItemIngredientId
                     };
+                cartItem.Price += cartItemIngredient.Ingredient.Price;
                 cartItem.CartItemIngredients.Add(cartItemIngredient);
             }
 
             var currentCart = GetCurrentCart();
-
+           
             currentCart.CartItems.Add(cartItem);
             SetCurrentCart(currentCart);
-            //_context.CartItems.Add(cartItem);
 
             return PartialView("_CartPartial", currentCart);
         }

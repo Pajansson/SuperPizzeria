@@ -10,7 +10,7 @@
              <tr>
                  <td> Dish: @cartItem.Dish.Name </td>
                  <td> Quantity: @cartItem.Quantity </td>
-                 <td> Price each: @cartItem.Dish.Price$ </td>
+                 <td> Price each: @cartItem.Price$ </td>
                  <td> Ingredients: </td>@foreach (var i in cartItem.CartItemIngredients)
                                         {
                                             <td>@i.Ingredient.Name</td>
@@ -25,5 +25,5 @@
     }
     
 </table>
-<h2> Total: @Model.CartItems.Sum((x => x.Dish.Price * x.Quantity))$</h2>
+<h2> Total: @Model.CartItems.Sum((x => x.Price * x.Quantity))$</h2>
 <a asp-controller="Orders" asp-action="Create">Check out</a>

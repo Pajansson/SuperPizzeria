@@ -29,17 +29,18 @@ namespace SuperPizzeria.Data
             {
                 var vegetarian = new Category {Name = "Vegetarian"};
                 var notVegetarian = new Category { Name = "Not Vegetarian" };
-                var cheese = new Ingredient { Name = "Cheese" };
-                var pineapple = new Ingredient { Name = "Pineapple" };
-                var kebab = new Ingredient { Name = "Kebab" };
-                var banana = new Ingredient { Name = "Banan" };
-                var tomatoe = new Ingredient { Name = "Tomatoe" };
-                var ham = new Ingredient { Name = "Ham" };
+                var cheese = new Ingredient { Name = "Cheese", Price = 1};
+                var pineapple = new Ingredient { Name = "Pineapple", Price = 1};
+                var kebab = new Ingredient { Name = "Kebab", Price = 2};
+                var banana = new Ingredient { Name = "Banan", Price = 1};
+                var tomatoe = new Ingredient { Name = "Tomatoe", Price = 1};
+                var ham = new Ingredient { Name = "Ham", Price = 1};
+
                 var capricciosa = new Dish { Name = "Capricciosa", Price = 7, Category = notVegetarian};
                 var margaritha = new Dish { Name = "Margaritha", Price = 6, Category = vegetarian };
                 var hawaii = new Dish { Name = "Hawaii", Price = 8, Category = notVegetarian };
 
-                var capricciosaCheese = new DishIngredient { Dish = capricciosa, Ingredient = cheese };
+                var capricciosaCheese = new DishIngredient { Dish = capricciosa, Ingredient = cheese};
                 var capricciosaTomatoe = new DishIngredient { Dish = capricciosa, Ingredient = tomatoe };
                 var capricciosaHam = new DishIngredient { Dish = capricciosa, Ingredient = ham };
 
@@ -50,19 +51,12 @@ namespace SuperPizzeria.Data
                 var margarithaCheese = new DishIngredient { Dish = margaritha, Ingredient = cheese };
                 var margarithaTomatoe = new DishIngredient { Dish = margaritha, Ingredient = tomatoe };
 
-                capricciosa.DishIngredients = new List<DishIngredient>();
-                capricciosa.DishIngredients.Add(capricciosaTomatoe);
-                capricciosa.DishIngredients.Add(capricciosaCheese);
-                capricciosa.DishIngredients.Add(capricciosaHam);
+                capricciosa.DishIngredients =
+                    new List<DishIngredient> {capricciosaTomatoe, capricciosaCheese, capricciosaHam};
 
-                hawaii.DishIngredients = new List<DishIngredient>();
-                hawaii.DishIngredients.Add(hawaiiHam);
-                hawaii.DishIngredients.Add(hawaiiCheese);
-                hawaii.DishIngredients.Add(hawaiiPineapple);
+                hawaii.DishIngredients = new List<DishIngredient> {hawaiiHam, hawaiiCheese, hawaiiPineapple};
 
-                margaritha.DishIngredients = new List<DishIngredient>();
-                margaritha.DishIngredients.Add(margarithaTomatoe);
-                margaritha.DishIngredients.Add(margarithaCheese);
+                margaritha.DishIngredients = new List<DishIngredient> {margarithaTomatoe, margarithaCheese};
 
                 context.Ingredients.Add(pineapple);
                 context.Ingredients.Add(kebab);

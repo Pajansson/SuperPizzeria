@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace SuperPizzeria.Models
 {
@@ -15,7 +11,7 @@ namespace SuperPizzeria.Models
             CartItemIngredients = new List<CartItemIngredient>();
             Quantity = 1;
         }
-        
+        public int Price { get; set; }
         public Guid CartItemId { get; set; }
         public Cart Cart { get; set; }
         public int CartId { get; set; }
