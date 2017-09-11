@@ -54,7 +54,7 @@ namespace SuperPizzeria.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Id")] Ingredient ingredient)
+        public async Task<IActionResult> Create([Bind("Name,Price,Id")] Ingredient ingredient)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace SuperPizzeria.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Id")] Ingredient ingredient)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Price,Id")] Ingredient ingredient)
         {
             if (id != ingredient.Id)
             {
