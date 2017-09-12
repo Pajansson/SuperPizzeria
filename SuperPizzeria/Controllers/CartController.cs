@@ -82,6 +82,7 @@ namespace SuperPizzeria.Controllers
             foreach (var dishIngredient in dbdish.DishIngredients)
             {
                 customizeDishViewModel.IngredientId.Add(dishIngredient.IngredientId);
+                dishIngredient.Ingredient.Price = 0;
             }
 
             return PartialView("_CartItemPartial", customizeDishViewModel);
