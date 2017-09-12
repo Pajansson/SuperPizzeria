@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SuperPizzeria.Data;
 using SuperPizzeria.Models;
+using SuperPizzeria.Services;
 using SuperPizzeria.ViewModels;
 
 namespace SuperPizzeria.Controllers
@@ -16,11 +17,13 @@ namespace SuperPizzeria.Controllers
 
     public class CartController : Controller
     {
+        private readonly ICartService _cartService;
         private readonly ApplicationDbContext _context;
 
-        public CartController(ApplicationDbContext context)
+        public CartController(ApplicationDbContext context, ICartService cartService)
         {
             _context = context;
+            _cartService = cartService;
         }
 
         // GET: Cart

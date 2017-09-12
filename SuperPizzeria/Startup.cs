@@ -42,6 +42,7 @@ namespace SuperPizzeria
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<UserManager<ApplicationUser>>();
             services.AddTransient <RoleManager<IdentityRole>>();
+            services.AddTransient<ICartService, CartService>();
             services.AddSession();
 
             services.AddMvc();
