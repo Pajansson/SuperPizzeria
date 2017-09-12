@@ -53,6 +53,48 @@ namespace SuperPizzeria.Services
             return cartItem;
         }
 
+        public Cart GetCurrentCart(HttpContext context)
+        {
+            Cart cart = null;
 
+            if (context.Session.GetString("Cart") != null)
+            {
+                var temp = context.Session.GetString("Cart");
+                cart = JsonConvert.DeserializeObject<Cart>(temp);
+            }
+
+            return cart ?? new Cart();
+        }
+
+        public void SetCurrentCart(Cart cart, HttpContext context)
+        {
+            var serializedValue = JsonConvert.SerializeObject(cart,
+                new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            context.Session.SetString("Cart", serializedValue);
+        }
+
+        public EditDishViewModel CustomizeDish(int id)
+        {
+            var dbdish = _context.Dishes.FirstOrDefault(x => x.Id == id);
+            dbdish.DishIngredients = _context.DishIngredients.Where(x => x.DishId == dbdish.Id).ToList();
+
+            var customizeDishViewModel = new EditDishViewModel
+            {
+                Dish = dbdish,
+                IngredientId = new List<int>(),
+                Ingredients = _context.Ingredients.ToList()
+            };
+            foreach (var dishIngredient in dbdish.DishIngredients)
+            {
+                customizeDishViewModel.IngredientId.Add(dishIngredient.IngredientId);
+                dishIngredient.Ingredient.Price = 0;
+            }
+            return customizeDishViewModel;
+        }
+
+        public CartItem GetCartItem(Guid id, Cart currentCart)
+        {
+            return currentCart.CartItems.FirstOrDefault(ci => ci.CartItemId == id);
+        }
     }
 }
