@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -27,41 +26,15 @@ namespace SuperPizzeria.Controllers
         }
 
         // GET: Cart
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Carts.ToListAsync());
-        }
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _context.Carts.ToListAsync());
+        //}
 
         [HttpPost]
-        public IActionResult AddToCartItemToCart(EditDishViewModel editDishViewModel)
+        public async Task<IActionResult> AddToCartItemToCart(EditDishViewModel editDishViewModel)
         {
-            var dbIngredients = _context.Ingredients.ToList();
-            var dbdish = _context.Dishes.Include(i => i.DishIngredients).ThenInclude(di => di.Dish)
-                .FirstOrDefault(x => x.Id == editDishViewModel.Dish.Id);
-            var cartItem = new CartItem
-            {
-                Dish = dbdish,
-                DishId = dbdish.Id,
-                Quantity = editDishViewModel.Quantity,
-                Price = dbdish.Price
-            };
-            foreach (var dishIngredient in cartItem.Dish.DishIngredients)
-            {
-                dishIngredient.Ingredient.Price = 0;
-            }
-
-            foreach (var cartItemIngredientId in editDishViewModel.IngredientId)
-            {
-                var cartItemIngredient =
-                    new CartItemIngredient
-                    {
-                        Ingredient = dbIngredients.Find(i => i.Id == cartItemIngredientId),
-                        CartItem = cartItem,
-                        IngredientId = cartItemIngredientId
-                    };
-                cartItem.Price += cartItemIngredient.Ingredient.Price;
-                cartItem.CartItemIngredients.Add(cartItemIngredient);
-            }
+            var cartItem = await _cartService.CreateCartItem(editDishViewModel);
 
             var currentCart = GetCurrentCart();
            
@@ -138,18 +111,18 @@ namespace SuperPizzeria.Controllers
         // POST: Cart/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ApplicationUserId")] Cart cart)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(cart);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(cart);
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Id,ApplicationUserId")] Cart cart)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(cart);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(cart);
+        //}
 
         // GET: Cart/Edit/5
         //public async Task<IActionResult> Edit(int? id)
@@ -231,15 +204,15 @@ namespace SuperPizzeria.Controllers
         }
 
         // POST: Cart/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var cart = await _context.Carts.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Carts.Remove(cart);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var cart = await _context.Carts.SingleOrDefaultAsync(m => m.Id == id);
+        //    _context.Carts.Remove(cart);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
         
         //public IActionResult CheckOut(Cart cart)
         //{
