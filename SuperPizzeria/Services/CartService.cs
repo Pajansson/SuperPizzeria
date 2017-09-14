@@ -14,13 +14,15 @@ namespace SuperPizzeria.Services
     public class CartService : ICartService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IPriceCheckService _priceCheckService;
 
-        public CartService(ApplicationDbContext context)
+        public CartService(ApplicationDbContext context, IPriceCheckService priceCheckService)
         {
             _context = context;
+            _priceCheckService = priceCheckService;
         }
 
-        public async Task<CartItem> CreateCartItem(EditDishViewModel editDishViewModel)
+        public CartItem CreateCartItem(EditDishViewModel editDishViewModel)
         {
             var dbIngredients = _context.Ingredients.ToList();
             var dbdish = _context.Dishes.Include(i => i.DishIngredients).ThenInclude(di => di.Dish)
@@ -46,10 +48,9 @@ namespace SuperPizzeria.Services
                         CartItem = cartItem,
                         IngredientId = cartItemIngredientId
                     };
-                cartItem.Price += cartItemIngredient.Ingredient.Price;
                 cartItem.CartItemIngredients.Add(cartItemIngredient);
             }
-
+            cartItem.Price = _priceCheckService.CalculateCartItemPrice(cartItem);
             return cartItem;
         }
 

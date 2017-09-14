@@ -22,7 +22,7 @@ namespace SuperPizzeria.Controllers
         [HttpPost]
         public async Task<IActionResult> AddToCartItemToCart(EditDishViewModel editDishViewModel)
         {
-            var cartItem = await _cartService.CreateCartItem(editDishViewModel);
+            var cartItem = _cartService.CreateCartItem(editDishViewModel);
 
             var currentCart = _cartService.GetCurrentCart(HttpContext);
            

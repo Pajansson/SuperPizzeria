@@ -8,7 +8,7 @@ namespace SuperPizzeria.Services
 {
     public interface ICartService
     {
-        Task<CartItem> CreateCartItem(EditDishViewModel editDishViewModel);
+        CartItem CreateCartItem(EditDishViewModel editDishViewModel);
         Cart GetCurrentCart(HttpContext context);
         void SetCurrentCart(Cart cart, HttpContext context);
         EditDishViewModel CustomizeDish(int id);

@@ -30,9 +30,9 @@ namespace SuperPizzeria
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseInMemoryDatabase(("DefaultConnection")));
-
+                options.UseInMemoryDatabase("DefaultConnection"));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -43,6 +43,7 @@ namespace SuperPizzeria
             services.AddTransient<UserManager<ApplicationUser>>();
             services.AddTransient <RoleManager<IdentityRole>>();
             services.AddTransient<ICartService, CartService>();
+            services.AddTransient<IPriceCheckService, PriceCheckService>();
             services.AddSession();
 
             services.AddMvc();
