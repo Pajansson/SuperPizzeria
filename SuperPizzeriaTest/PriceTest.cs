@@ -18,16 +18,9 @@ namespace SuperPizzeriaTest
 
         public PriceTest()
         {
-            var efServiceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
-
             var services = new ServiceCollection();
             services
-                .AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>()
-                .AddDbContext<ApplicationDbContext>(b => b.UseInMemoryDatabase("Scratch")
-                    .UseInternalServiceProvider(efServiceProvider))
                 .AddTransient<IPriceCheckService, PriceCheckService>();
-
-            services.AddMvc();
 
             _serviceProvider = services.BuildServiceProvider();
         }
