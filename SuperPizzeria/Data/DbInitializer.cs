@@ -14,7 +14,6 @@ namespace SuperPizzeria.Data
         {
             if (env.EnvironmentName == "Production")
             {
-
                 context.Database.Migrate();
             }
 
