@@ -35,6 +35,16 @@ namespace SuperPizzeriaTest
             Assert.Equal(8, result);
         }
 
+        [Fact]
+        public void CartPriceTest()
+        {
+            var cart = CreateTestCart();
+            var priceCheckService = new PriceCheckService();
+            _serviceProvider.GetService<IPriceCheckService>();
+            var result = priceCheckService.CalulateCartPrice(cart);
+            Assert.Equal(8, result);
+        }
+
         private static CartItem CreateTestCartItem()
         {
             var testDishHawaii = new Dish
@@ -100,11 +110,16 @@ namespace SuperPizzeriaTest
             return testCartItem;
         }
 
-        private static EditDishViewModel CreateTestEditDishViewModel()
+        private static Cart CreateTestCart()
         {
             var testDishHawaii = new Dish
             {
                 Price = 8
+            };
+
+            var testCartItem = new CartItem
+            {
+                Dish = testDishHawaii
             };
 
             var testHamIngredient = new Ingredient
@@ -158,12 +173,10 @@ namespace SuperPizzeriaTest
 
             testDishHawaii.DishIngredients = testDishIngredients;
 
-            var editDishViewModel = new EditDishViewModel
-            {
-                Dish = testDishHawaii,
-            };
-
-            return editDishViewModel;
+            var cart = new Cart();
+            cart.CartItems.Add(testCartItem);
+            
+            return cart;
         }
     }
 }

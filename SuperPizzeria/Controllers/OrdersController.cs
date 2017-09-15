@@ -23,11 +23,12 @@ namespace SuperPizzeria.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
 
-        public OrdersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public OrdersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
         // GET: Orders
@@ -83,6 +84,7 @@ namespace SuperPizzeria.Controllers
                 Cart = order.Cart,
                 CartId = order.CartId
             };
+            _emailSender.SendEmailAsync(order.ApplicationUser.Email, "Order confirmation", "Order on the way!");
             _context.Orders.Add(newOrder);
             _context.SaveChanges();
             HttpContext.Session.Clear();

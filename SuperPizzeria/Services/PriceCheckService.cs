@@ -34,6 +34,10 @@ namespace SuperPizzeria.Services
 
         public int CalulateCartPrice(Cart cart)
         {
+            foreach (var cartItem in cart.CartItems)
+            {
+                cartItem.Price = CalculateCartItemPrice(cartItem);
+            }
             return cart.CartItems.Sum(cartItem => cartItem.Price);
         }
     }
