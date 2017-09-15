@@ -132,7 +132,7 @@ namespace SuperPizzeria.Controllers
         }
 
         // GET: Dishes/Edit/5
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -163,7 +163,7 @@ namespace SuperPizzeria.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         //public async Task<IActionResult> Edit(int id, [Bind("Name,Id,Price")] Dish dish)
-        public IActionResult Edit(EditDishViewModel editDishViewModel)
+        public async Task<IActionResult> Edit(EditDishViewModel editDishViewModel)
         {
             if (ModelState.IsValid)
             {

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SuperPizzeria.Data;
@@ -18,11 +17,9 @@ namespace SuperPizzeria
 {
     public class Startup
     {
-        public string IsInDevelopment { get; set; }
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnviorment)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            IsInDevelopment = hostingEnviorment.EnvironmentName;
         }
 
         public IConfiguration Configuration { get; }
@@ -32,17 +29,10 @@ namespace SuperPizzeria
         {
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            if (IsInDevelopment == "Development")
-            {
-                services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseInMemoryDatabase("defaultConnection"));
-            }
-            else
-            {
-                services.AddDbContext<ApplicationDbContext>(options =>//sql
-                    options.UseSqlServer("DefaultConnection"));
-            }
+
             
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseInMemoryDatabase("DefaultConnection"));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -84,7 +74,7 @@ namespace SuperPizzeria
                     template: "{controller=Dishes}/{action=Index}/{id?}");
             });
 
-            DbInitializer.Initialize(context, userManager, roleManager, env);
+            DbInitializer.Initialize(context, userManager, roleManager);
         }
     }
 }

@@ -1,22 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using SuperPizzeria.Models;
 
 namespace SuperPizzeria.Data
 {
     public class DbInitializer
     {
-        public static void Initialize(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IHostingEnvironment env)
+        public static void Initialize(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            if (env.EnvironmentName == "Production")
-            {
-                context.Database.Migrate();
-            }
-
             var aUser = new ApplicationUser();
             aUser.UserName = "student@test.com";
             aUser.Email = "student@test.com";
