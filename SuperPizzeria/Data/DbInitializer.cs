@@ -21,9 +21,10 @@ namespace SuperPizzeria.Data
             var adminUser = new ApplicationUser();
             adminUser.UserName = "admin@test.com";
             adminUser.Email = "admin@test.com";
+            adminUser.Adress = "Väg123";
             var adminUserResult = userManager.CreateAsync(adminUser, "Pa$$w0rd").Result;
 
-            userManager.AddToRoleAsync(adminUser, "Admin");
+            userManager.AddToRoleAsync(adminUser, "Admin").Wait();
 
             if (context.Dishes.ToList().Count == 0)
             {

@@ -17,9 +17,12 @@ namespace SuperPizzeria
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private IHostingEnvironment _iHostingEnvironment;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
+            _iHostingEnvironment= environment;
         }
 
         public IConfiguration Configuration { get; }
@@ -27,12 +30,17 @@ namespace SuperPizzeria
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            if (_iHostingEnvironment.IsProduction() || _iHostingEnvironment.IsStaging())
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            }
 
-            
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseInMemoryDatabase("DefaultConnection"));
+            else
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseInMemoryDatabase("DefaultConnection"));
+            }
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -73,7 +81,10 @@ namespace SuperPizzeria
                     name: "default",
                     template: "{controller=Dishes}/{action=Index}/{id?}");
             });
-
+            if (_iHostingEnvironment.IsStaging() || _iHostingEnvironment.IsProduction())
+            {
+                context.Database.Migrate();
+            }
             DbInitializer.Initialize(context, userManager, roleManager);
         }
     }
