@@ -25,12 +25,12 @@ namespace SuperPizzeria.Services
         public CartItem CreateCartItem(EditDishViewModel editDishViewModel)
         {
             var dbIngredients = _context.Ingredients.ToList();
-            var dbdish = _context.Dishes.Include(i => i.DishIngredients).ThenInclude(di => di.Dish)
+            var dbdish = _context.Dishes.Include(i => i.DishIngredients)
                 .FirstOrDefault(x => x.Id == editDishViewModel.Dish.Id);
             var cartItem = new CartItem
             {
                 Dish = dbdish,
-                DishId = dbdish.Id,
+                //DishId = dbdish.Id,
                 Quantity = editDishViewModel.Quantity,
                 Price = dbdish.Price
             };
@@ -44,9 +44,11 @@ namespace SuperPizzeria.Services
                 var cartItemIngredient =
                     new CartItemIngredient
                     {
+                        //CartItemIngredientId = Guid.NewGuid(),//dubblett?
                         Ingredient = dbIngredients.Find(i => i.Id == cartItemIngredientId),
                         CartItem = cartItem,
-                        IngredientId = cartItemIngredientId
+                        CartItemId = cartItem.CartItemId
+                        //IngredientId = cartItemIngredientId
                     };
                 cartItem.CartItemIngredients.Add(cartItemIngredient);
             }

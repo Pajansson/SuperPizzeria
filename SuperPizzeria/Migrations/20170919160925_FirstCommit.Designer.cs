@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore.Storage.Internal;
 using SuperPizzeria.Data;
 using System;
 
-namespace SuperPizzeria.Data.Migrations
+namespace SuperPizzeria.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170918103138_commit")]
-    partial class commit
+    [Migration("20170919160925_FirstCommit")]
+    partial class FirstCommit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -184,7 +184,7 @@ namespace SuperPizzeria.Data.Migrations
 
             modelBuilder.Entity("SuperPizzeria.Models.Cart", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("ApplicationUserId");
@@ -200,7 +200,7 @@ namespace SuperPizzeria.Data.Migrations
 
             modelBuilder.Entity("SuperPizzeria.Models.CartItem", b =>
                 {
-                    b.Property<int>("CartId");
+                    b.Property<Guid>("CartId");
 
                     b.Property<int>("DishId");
 
@@ -219,17 +219,21 @@ namespace SuperPizzeria.Data.Migrations
 
             modelBuilder.Entity("SuperPizzeria.Models.CartItemIngredient", b =>
                 {
-                    b.Property<int>("CartItemId");
+                    b.Property<Guid>("CartItemId");
 
                     b.Property<int>("IngredientId");
 
-                    b.Property<int?>("CartItemCartId");
+                    b.Property<Guid?>("CartItemCartId");
 
                     b.Property<int?>("CartItemDishId");
+
+                    b.Property<Guid>("CartItemIngredientId");
 
                     b.Property<bool>("Enabled");
 
                     b.HasKey("CartItemId", "IngredientId");
+
+                    b.HasAlternateKey("CartItemIngredientId");
 
                     b.HasIndex("IngredientId");
 
@@ -303,7 +307,7 @@ namespace SuperPizzeria.Data.Migrations
 
                     b.Property<string>("ApplicationUserId");
 
-                    b.Property<int>("CartId");
+                    b.Property<Guid>("CartId");
 
                     b.HasKey("OrderId");
 

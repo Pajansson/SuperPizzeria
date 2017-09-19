@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace SuperPizzeria.Models
@@ -15,6 +16,7 @@ namespace SuperPizzeria.Models
         public int CategoryId { get; set; }
         [Required]
         public string Name { get; set; }
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         public int Price { get; set; }

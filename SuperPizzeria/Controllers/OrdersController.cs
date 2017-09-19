@@ -20,8 +20,8 @@ namespace SuperPizzeria.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
-        private readonly ILogger _logger;
+        //private readonly IEmailSender _emailSender;
+        //private readonly ILogger _logger;
 
         public OrdersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
@@ -77,11 +77,24 @@ namespace SuperPizzeria.Controllers
         [HttpPost]
         public IActionResult Create(Order order)
         {
+            var cart = GetCurrentCart();
+            foreach (var cartItem in cart.CartItems)
+            {
+                _context.Entry(cartItem.Dish).State = EntityState.Unchanged;
+                foreach (var cartItemIngredient in cartItem.CartItemIngredients)
+                {
+                    _context.Entry(cartItemIngredient.Ingredient).State = EntityState.Unchanged;
+                }
+            }
+
+            _context.Carts.Add(cart);
+            _context.SaveChanges();
+
             var newOrder = new Order
             {
                 ApplicationUser = order.ApplicationUser,
-                Cart = order.Cart,
-                CartId = order.CartId
+                
+                CartId = cart.Id
             };
             _context.Orders.Add(newOrder);
             _context.SaveChanges();

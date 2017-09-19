@@ -9,7 +9,8 @@ namespace SuperPizzeria.Models
     {
         public ApplicationUser ApplicationUser { get; set; }
         public Cart Cart { get; set; }
-        public int CartId { get; set; }
+        //public int CartId { get; set; }
+        public Guid CartId { get; set; }
         public int OrderId { get; set; }
     }
 }

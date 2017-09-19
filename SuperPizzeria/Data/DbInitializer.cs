@@ -9,22 +9,26 @@ namespace SuperPizzeria.Data
     {
         public static void Initialize(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            var aUser = new ApplicationUser();
-            aUser.UserName = "student@test.com";
-            aUser.Email = "student@test.com";
-            aUser.Adress = "Gatan123";
-            var r = userManager.CreateAsync(aUser, "Pa$$w0rd").Result;
+            if (!context.Users.Any())
+            {
+                var aUser = new ApplicationUser();
+                aUser.UserName = "student@test.com";
+                aUser.Email = "student@test.com";
+                aUser.Adress = "Gatan123";
+                var r = userManager.CreateAsync(aUser, "Pa$$w0rd").Result;
 
-            var adminRole = new IdentityRole { Name = "Admin" };
-            var roleResult = roleManager.CreateAsync(adminRole).Result;
+                var adminRole = new IdentityRole { Name = "Admin" };
+                var roleResult = roleManager.CreateAsync(adminRole).Result;
 
-            var adminUser = new ApplicationUser();
-            adminUser.UserName = "admin@test.com";
-            adminUser.Email = "admin@test.com";
-            adminUser.Adress = "Väg123";
-            var adminUserResult = userManager.CreateAsync(adminUser, "Pa$$w0rd").Result;
+                var adminUser = new ApplicationUser();
+                adminUser.UserName = "admin@test.com";
+                adminUser.Email = "admin@test.com";
+                adminUser.Adress = "Väg123";
+                var adminUserResult = userManager.CreateAsync(adminUser, "Pa$$w0rd").Result;
 
-            userManager.AddToRoleAsync(adminUser, "Admin").Wait();
+                userManager.AddToRoleAsync(adminUser, "Admin").Wait();
+            }
+            
 
             if (context.Dishes.ToList().Count == 0)
             {

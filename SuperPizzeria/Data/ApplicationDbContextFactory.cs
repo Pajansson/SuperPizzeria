@@ -12,7 +12,7 @@ namespace SuperPizzeria.Data
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            builder.UseSqlServer("Server=tcp:superpizzeriaserver.database.windows.net,1433;Initial Catalog=SuperPizzeriaDb;Persist Security Info=False;User ID=patrik_jansson;Password=Quizer1212;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            builder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=SuperPizzeria;Trusted_Connection=True;MultipleActiveResultSets=true");
             var dbContext = new ApplicationDbContext(builder.Options);
 
             return dbContext;
